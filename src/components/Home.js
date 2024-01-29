@@ -113,8 +113,8 @@ function Home (){
         if (e.nativeEvent.submitter.className === 'btn') {
         try {
             const id = uuidv4();
-            const countryValue = country.value;
-        const stateValue = state.value;
+            const countryValue = country.label;
+        const stateValue = state.label;
         //const currencyValue = currency.value;
             console.log("Sending data to backend:", { id, firstName, joinDate, countryValue, stateValue, currency, imageData });
             const formData = new FormData();
