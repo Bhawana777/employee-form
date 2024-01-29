@@ -33,3 +33,29 @@ body{
 .footer{
     text-align: center;
 }
+
+.employee-grid {
+    margin-top: 20px;
+  }
+  
+  .employee-grid table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+  }
+  
+  .employee-grid th, .employee-grid td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .employee-grid th {
+    background-color: #f2f2f2;
+    text-align: left;
+  }
+  
+  .employee-grid img {
+    max-width: 100px;
+    max-height: 100px;
+  }
+  

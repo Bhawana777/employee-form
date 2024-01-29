@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 import {useLocation, useNavigate} from 'react-router-dom';
 import Select from 'react-select';
 import '../css/style.css';
@@ -111,11 +112,13 @@ function Home (){
         e.preventDefault();
         if (e.nativeEvent.submitter.className === 'btn') {
         try {
+            const id = uuidv4();
             const countryValue = country.value;
         const stateValue = state.value;
         //const currencyValue = currency.value;
-            console.log("Sending data to backend:", { firstName, joinDate, countryValue, stateValue, currency, imageData });
+            console.log("Sending data to backend:", { id, firstName, joinDate, countryValue, stateValue, currency, imageData });
             const formData = new FormData();
+            formData.append('id', id);
         formData.append('firstName', firstName);
         formData.append('joinDate', joinDate);
         formData.append('country', countryValue);
@@ -250,7 +253,7 @@ function Home (){
                     <tbody>
                         {employeeData.map((employee, index) => (
                             <tr key={index}>
-                                <td>{employee.id}</td>
+                                <td>{index + 1}</td>
                                 <td>{employee.firstName}</td>
                                 <td>{employee.joinDate}</td>
                                 <td>{employee.country}</td>
