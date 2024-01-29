@@ -255,7 +255,7 @@ function Home (){
                             <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>{employee.firstName}</td>
-                                <td>{employee.joinDate}</td>
+                                <td>{employee.joinDate ? new Date(employee.joinDate).toISOString().split('T')[0] : ''}</td>
                                 <td>{employee.country}</td>
                                 <td>{employee.state}</td>
                                 <td>{employee.currency}</td>
