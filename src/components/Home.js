@@ -21,6 +21,7 @@ function Home (){
     const [employeeData, setEmployeeData] = useState([]);
     const [countryOptions, setCountryOptions] = useState([]);
     const [statesOptions, setStateOptions] = useState([]);
+    //const [currencyOptions, setCurrencyOptions] = useState([]);
     const [selectedCountry, setSelectedCountry] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     useEffect(() => {
@@ -31,6 +32,7 @@ function Home (){
     useEffect(() => {
         if (selectedCountry) {
             fetchStatesData(selectedCountry.value);
+            fetchCurrenciesData(selectedCountry.value);
         }
     }, [selectedCountry]);
     const fetchEmployeeData = async () => {
@@ -85,20 +87,39 @@ function Home (){
             console.error('Error fetching states data:', error);
         }
     };
+    const fetchCurrenciesData = async (countryCode) => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:3002/api/get-currency?code=${countryCode}`);
+            const data = response.data;
+
+            if (data.success) {
+                //const currencies = [{
+                //    label: data.data,
+                //    value: data.data
+                //}];
+                //setCurrencyOptions(currencies);
+                setCurrency(data.data);
+            } else {
+                console.error('Error fetching currency data:', data.msg);
+            }
+        } catch (error) {
+            console.error('Error fetching currency data:', error);
+        }
+    };
     async function handleSubmit(e) {
         e.preventDefault();
         try {
             const countryValue = country.value;
         const stateValue = state.value;
-        const currencyValue = currency.value;
-            console.log("Sending data to backend:", { firstName, joinDate, countryValue, stateValue, currencyValue });
+        //const currencyValue = currency.value;
+            console.log("Sending data to backend:", { firstName, joinDate, countryValue, stateValue, currency });
 
             await axios.post("http://localhost:8000/home", {
                 firstName,
                 joinDate,
                 country: countryValue, 
             state: stateValue, 
-            currency: currencyValue 
+            currency 
                 //photo: imageData
             })
             //console.log(data); 
@@ -107,14 +128,6 @@ function Home (){
             console.error('Error saving employee data:', error);
         }
     };
-    
-    const currencies = [
-        { value: 'USA', label: 'United States' },
-        { value: 'Canada', label: 'Canada' },
-        { value: 'UK', label: 'United Kingdom' },
-        { value: 'Australia', label: 'Australia' },
-        { value: 'Germany', label: 'Germany' }
-    ];
     
     const startCamera = async () => {
         try {
@@ -180,9 +193,9 @@ function Home (){
                         <Select id="state" options={statesOptions || []} value={state} onChange={(selectedOption) => setState(selectedOption)}/>
                     </div>
                     <div className="confirm-password">
-                    <label className="form__label" htmlFor="country">Currency</label>
-                        <Select id="currency" options={currencies} value={currency} onChange={(selectedOption) => setCurrency(selectedOption)}/>
-                    </div>
+                <label className="form__label" htmlFor="currency">Currency</label>
+                <input type="text" value={currency} onChange={(e) => setCurrency(e.target.value)} readOnly />
+            </div>
                     {/* <div className="camera">
                     <label className="form__label" htmlFor="country">Photo</label>
                 <video ref={videoRef} autoPlay />
