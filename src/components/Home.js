@@ -109,6 +109,7 @@ function Home (){
     };
     async function handleSubmit(e) {
         e.preventDefault();
+        if (e.nativeEvent.submitter.className === 'btn') {
         try {
             const countryValue = country.value;
         const stateValue = state.value;
@@ -144,6 +145,7 @@ function Home (){
         } catch (error) {
             console.error('Error saving employee data:', error);
         }
+    }
     };
     
     const startCamera = async () => {
