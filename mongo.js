@@ -2,9 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
+const multer = require("multer"); 
 const app = express();
-
+const upload = multer({ dest: 'uploads/' });
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
@@ -28,10 +28,35 @@ const employeeDataSchema = new mongoose.Schema({
     joinDate: { type: Date, required: true },
     country: { type: String, required: true },
     state: { type: String, required: true },
-    currency: { type: String, required: true }
+    currency: { type: String, required: true },
+    photo: { type: String } 
 });
 
 const EmployeeData = mongoose.model("EmployeeData", employeeDataSchema)
+
+app.post("/home", upload.single('photo'), async (req, res) => {
+    try {
+        const { firstName, joinDate, country, state, currency } = req.body;
+        
+        const photo = req.file ? req.file.path : null;
+
+        const newEmployeeData = new EmployeeData({
+            firstName,
+            joinDate,
+            country,
+            state,
+            currency,
+            photo 
+        });
+
+        await newEmployeeData.save();
+        res.status(201).json({ success: true, message: "Employee data saved successfully" });
+    } catch (error) {
+        console.error('Error saving employee data:', error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
+
 
 module.exports = {
     login: login,

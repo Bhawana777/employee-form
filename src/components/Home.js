@@ -112,16 +112,23 @@ function Home (){
             const countryValue = country.value;
         const stateValue = state.value;
         //const currencyValue = currency.value;
-            console.log("Sending data to backend:", { firstName, joinDate, countryValue, stateValue, currency });
-
-            await axios.post("http://localhost:8000/home", {
-                firstName,
-                joinDate,
-                country: countryValue, 
-            state: stateValue, 
-            currency 
-                //photo: imageData
-            })
+            console.log("Sending data to backend:", { firstName, joinDate, countryValue, stateValue, currency, imageData });
+            const formData = new FormData();
+        formData.append('firstName', firstName);
+        formData.append('joinDate', joinDate);
+        formData.append('country', countryValue);
+        formData.append('state', stateValue);
+        formData.append('currency', currency);
+        
+        // Check if imageData is available
+        if (imageData) {
+            const blob = await fetch(imageData).then(response => response.blob());
+            formData.append('photo', blob, 'photo.jpg');
+        } else if (document.getElementById('fileInput').files.length > 0) {
+            const file = document.getElementById('fileInput').files[0];
+            formData.append('photo', file);
+        }
+            await axios.post("http://localhost:8000/home", formData)
             //console.log(data); 
             setSubmitted(true);
         } catch (error) {
@@ -196,7 +203,7 @@ function Home (){
                 <label className="form__label" htmlFor="currency">Currency</label>
                 <input type="text" value={currency} onChange={(e) => setCurrency(e.target.value)} readOnly />
             </div>
-                    {/* <div className="camera">
+                 <div className="camera">
                     <label className="form__label" htmlFor="country">Photo</label>
                 <video ref={videoRef} autoPlay />
                 {showStartButton && <button onClick={startCamera}>Start Camera</button>}
@@ -209,7 +216,7 @@ function Home (){
                     <img src={imageData} alt="Captured" />
                 </div>
             )}
-            <canvas ref={canvasRef} style={{ display: 'none' }} />*/}
+            <canvas ref={canvasRef} style={{ display: 'none' }} />
                 </div>
                     <input type="submit" className="btn" value="Submit" />
             </form>
@@ -225,6 +232,7 @@ function Home (){
                             <th>Country</th>
                             <th>State</th>
                             <th>Currency</th>
+                            <th>Photo</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -236,6 +244,7 @@ function Home (){
                                 <td>{employee.country}</td>
                                 <td>{employee.state}</td>
                                 <td>{employee.currency}</td>
+                                <td>{employee.photo}</td>
                             </tr>
                         ))}
                     </tbody>

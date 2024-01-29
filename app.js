@@ -1,12 +1,12 @@
 const express = require("express")
 const { login, EmployeeData } = require("./mongo");
 const cors = require("cors")
+const multer = require("multer");
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
-
-
+const upload = multer({ dest: 'uploads/' });
 
 app.get("/",cors(),(req,res)=>{
 
@@ -57,15 +57,17 @@ app.post("/signup",async(req,res)=>{
     }
 
 })
-app.post("/home", async (req, res) => {
+app.post("/home", upload.single('photo'), async (req, res) => {
     const { firstName, joinDate, country, state, currency } = req.body;
     console.log("Received data:", req.body);
+    const photo = req.file ? req.file.path : null;
     const newEmployeeData = new EmployeeData({ 
         firstName: firstName, 
         joinDate: joinDate, 
         country: country, 
         state: state, 
-        currency: currency
+        currency: currency,
+        photo: photo
     });
     console.log("New Employee Data:", newEmployeeData); 
     try {
