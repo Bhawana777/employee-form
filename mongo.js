@@ -50,7 +50,10 @@ app.post("/home", upload.single('photo'), async (req, res) => {
         });
 
         await newEmployeeData.save();
-        res.status(201).json({ success: true, message: "Employee data saved successfully" });
+        const savedEmployeeData = await EmployeeData.findOne({ _id: newEmployeeData._id });
+        console.log("savedEmployee",savedEmployeeData);
+        res.status(201).json(savedEmployeeData);
+        //res.status(201).json({ success: true, message: "Employee data saved successfully" });
     } catch (error) {
         console.error('Error saving employee data:', error);
         res.status(500).json({ success: false, message: "Internal server error" });

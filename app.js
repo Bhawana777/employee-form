@@ -72,7 +72,9 @@ app.post("/home", upload.single('photo'), async (req, res) => {
     console.log("New Employee Data:", newEmployeeData); 
     try {
         await newEmployeeData.save();
-        res.status(201).send("Employee data saved successfully");
+        const savedEmployeeData = await EmployeeData.findOne({ _id: newEmployeeData._id });
+        res.status(201).json(savedEmployeeData);
+        //res.status(201).send("Employee data saved successfully");
     } catch (error) {
         console.error("Error saving employee data:", error);
         res.status(500).send("An error occurred while saving employee data");

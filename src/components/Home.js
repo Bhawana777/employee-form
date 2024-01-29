@@ -23,9 +23,10 @@ function Home (){
     const [statesOptions, setStateOptions] = useState([]);
     //const [currencyOptions, setCurrencyOptions] = useState([]);
     const [selectedCountry, setSelectedCountry] = useState(null);
-    const [submitted, setSubmitted] = useState(false);
+    const [submitted, setSubmitted] = useState(true);
+    const baseUrl = 'http://localhost:8000/';
+
     useEffect(() => {
-        // Fetch employee data from the backend when the component mounts
         fetchEmployeeData();
         fetchCountriesData();
     }, []);
@@ -128,9 +129,18 @@ function Home (){
             const file = document.getElementById('fileInput').files[0];
             formData.append('photo', file);
         }
-            await axios.post("http://localhost:8000/home", formData)
+        const response = await axios.post("http://localhost:8000/home", formData);
+        
+        const newEmployee = response.data;
+        console.log("New Employee data:", newEmployee);
+        setEmployeeData(prevEmployeeData => {
+            const updatedEmployeeData = [...prevEmployeeData, newEmployee];
+            console.log("Updated Employee data:", updatedEmployeeData);
+            return updatedEmployeeData;
+        });
             //console.log(data); 
             setSubmitted(true);
+            window.alert("Data has been saved successfully!");
         } catch (error) {
             console.error('Error saving employee data:', error);
         }
@@ -220,7 +230,7 @@ function Home (){
                 </div>
                     <input type="submit" className="btn" value="Submit" />
             </form>
-            {submitted && (
+            {employeeData && (
             <div className="employee-grid">
                 <h2>Employee Data</h2>
                 <table>
@@ -244,7 +254,8 @@ function Home (){
                                 <td>{employee.country}</td>
                                 <td>{employee.state}</td>
                                 <td>{employee.currency}</td>
-                                <td>{employee.photo}</td>
+                                <td>{employee.photo && (
+                <img src={baseUrl + employee.photo.replace(/\\/g, '\\')} alt="Employee Photo" />)}</td>
                             </tr>
                         ))}
                     </tbody>
