@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import Select from 'react-select';
 import '../css/style.css';
 
 function Home (){
     const location=useLocation();
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const [imageData, setImageData] = useState(null);
@@ -24,7 +24,7 @@ function Home (){
     const [statesOptions, setStateOptions] = useState([]);
     //const [currencyOptions, setCurrencyOptions] = useState([]);
     const [selectedCountry, setSelectedCountry] = useState(null);
-    const [submitted, setSubmitted] = useState(true);
+    //const [submitted, setSubmitted] = useState(true);
     const baseUrl = 'http://localhost:8000/';
 
     useEffect(() => {
@@ -143,7 +143,7 @@ function Home (){
             return updatedEmployeeData;
         });
             //console.log(data); 
-            setSubmitted(true);
+            //setSubmitted(true);
             window.alert("Data has been saved successfully!");
         } catch (error) {
             console.error('Error saving employee data:', error);
@@ -260,7 +260,7 @@ function Home (){
                                 <td>{employee.state}</td>
                                 <td>{employee.currency}</td>
                                 <td>{employee.photo && (
-                <img src={baseUrl + employee.photo.replace(/\\/g, '\\')} alt="Employee Photo" />)}</td>
+                <img src={baseUrl + employee.photo.replace(/\\/g, '\\')} alt="Emp Pic" />)}</td>
                             </tr>
                         ))}
                     </tbody>
